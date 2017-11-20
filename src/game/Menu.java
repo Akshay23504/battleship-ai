@@ -35,7 +35,7 @@ public class Menu {
     private final Integer[] boardSizeValues = {6, 8, 10, 12, 14, 16, 18};
 
     private final String fontName = "Calibri";
-    private final String projectTitle = "AI approaches to Battleship";
+    private final String projectTitle = "AI Approaches to Battleship";
     private final String developedBy = "(Developed by humans)";
     private final String member1 = "Akshay Aravind";
     private final String member2 = "Arjun Koppal Manjunath";
