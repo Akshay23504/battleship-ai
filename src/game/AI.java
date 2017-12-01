@@ -1,5 +1,7 @@
 package game;
 
+import board.Algorithm1;
+
 import java.util.Random;
 
 // TODO Change name probably
@@ -12,4 +14,9 @@ public class AI {
         indices[1] = random.nextInt(n);
         return indices;
     }
+
+    public static int[] dynamicProgramming(Algorithm1 playerKB) {
+        return playerKB.calculateTop6();
+    }
+
 }

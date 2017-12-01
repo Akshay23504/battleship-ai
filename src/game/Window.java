@@ -1,5 +1,6 @@
 package game;
 
+import board.Algorithm1;
 import board.Board;
 import board.Creator;
 import board.SmallBoard;
@@ -139,26 +140,46 @@ public class Window {
     private void beginGame(Ship[] playerOneShips, Ship[] playerTwoShips, Board board, SmallBoard smallBoard) {
         changeTurns(board, smallBoard);
         setPlayerOneTurn(false);
+        Algorithm1 playerOneKB = new Algorithm1();
+        Algorithm1 playerTwoKB = new Algorithm1();
+        playerOneKB.initializeScoreMap();
+        playerTwoKB.initializeScoreMap();
+        int[] indices;
 
         while (gameRunning) {
             switch (gameMode) {
                 case HumanVsAI:
-                    if (!playerOneTurn) {
-                        int[] indices = AI.getRandomIndices(board.getArray().length);
+//                    if (!playerOneTurn) {
+                        /*int[] indices = AI.getRandomIndices(board.getArray().length);
                         while (!board.selectedPositionOnBoardByPlayer(indices[0], indices[1])) {
                             indices = AI.getRandomIndices(board.getArray().length);
                         }
                         MouseEvent mouseEvent = new MouseEvent(frame, 0, 0, 0, indices[0], indices[1], 1, false);
                         for (MouseListener mouseListener : frame.getMouseListeners()) {
                             mouseListener.mousePressed(mouseEvent);
+                        }*/
+                        if (!playerOneTurn) {
+                            indices = AI.dynamicProgramming(playerTwoKB);
+                            board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                            MouseEvent mouseEvent = new MouseEvent(frame, 0, 0, 0, indices[0], indices[1], 1, false);
+                            for (MouseListener mouseListener : frame.getMouseListeners()) {
+                                mouseListener.mousePressed(mouseEvent);
+                            }
+                            playerTwoKB.updateScoreMap(indices[0], indices[1]);
                         }
-                    }
+//                    }
                     break;
                 case AIVsAI:
-                    int[] indices = AI.getRandomIndices(board.getArray().length);
+                    /*int[] indices = AI.getRandomIndices(board.getArray().length);
                     while (!board.selectedPositionOnBoardByPlayer(indices[0], indices[1])) {
                         indices = AI.getRandomIndices(board.getArray().length);
+                    }*/
+                    if (!playerOneTurn) {
+                        indices = AI.dynamicProgramming(playerTwoKB);
+                    } else {
+                        indices = AI.dynamicProgramming(playerOneKB);
                     }
+                    board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
                     try {
                         TimeUnit.SECONDS.sleep(1);
                     } catch (InterruptedException ex) {
@@ -167,6 +188,11 @@ public class Window {
                     MouseEvent mouseEvent = new MouseEvent(frame, 0, 0, 0, indices[0], indices[1], 1, false);
                     for (MouseListener mouseListener : frame.getMouseListeners()) {
                         mouseListener.mousePressed(mouseEvent);
+                    }
+                    if (!playerOneTurn) {
+                        playerOneKB.updateScoreMap(indices[0], indices[1]);
+                    } else {
+                        playerTwoKB.updateScoreMap(indices[0], indices[1]);
                     }
                     break;
                 case HumanVsHuman:

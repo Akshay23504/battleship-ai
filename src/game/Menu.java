@@ -147,6 +147,7 @@ public class Menu {
         lengthOfBattleshipsComboBox.setLocation(
                 window.getWidth() / 2 + lengthOfBattleshipsText.getWidth(),
                 window.getHeight() / 2 - 90 + startGameButton.getHeight());
+        lengthOfBattleshipsComboBox.setSelectedItem(5);
         lengthOfBattleshipsComboBox.setVisible(true);
     }
 
@@ -181,6 +182,7 @@ public class Menu {
         lengthOfCruisersComboBox.setLocation(
                 window.getWidth() / 2 + lengthOfCruiserText.getWidth(),
                 window.getHeight() / 2 - 100 + startGameButton.getHeight() + lengthOfBattleshipsComboBox.getHeight());
+        lengthOfCruisersComboBox.setSelectedItem(4);
         lengthOfCruisersComboBox.setVisible(true);
     }
 
@@ -191,6 +193,7 @@ public class Menu {
                 window.getWidth() / 2 - numberOfDestroyersComboBox.getWidth() - 10,
                 window.getHeight() / 2 - 110 + startGameButton.getHeight() + numberOfBattleshipsComboBox.getHeight() +
                         numberOfCruisersComboBox.getHeight());
+        numberOfDestroyersComboBox.setSelectedItem(2);
         numberOfDestroyersComboBox.setVisible(true);
 
         numberOfDestroyersText = new JLabel("Number of Destroyers: ");
@@ -219,6 +222,7 @@ public class Menu {
                 window.getWidth() / 2 + lengthOfDestroyersText.getWidth(),
                 window.getHeight() / 2 - 110 + startGameButton.getHeight() + lengthOfBattleshipsComboBox.getHeight() +
                         lengthOfCruisersComboBox.getHeight());
+        lengthOfDestroyersComboBox.setSelectedItem(3);
         lengthOfDestroyersComboBox.setVisible(true);
     }
 
@@ -257,6 +261,7 @@ public class Menu {
                 window.getWidth() / 2 + lengthOfDestroyersText.getWidth(),
                 window.getHeight() / 2 - 120 + startGameButton.getHeight() + lengthOfBattleshipsComboBox.getHeight() +
                         lengthOfCruisersComboBox.getHeight() + lengthOfDestroyersComboBox.getHeight());
+        lengthOfSubmarinesComboBox.setSelectedItem(2);
         lengthOfSubmarinesComboBox.setVisible(true);
     }
 
@@ -290,6 +295,7 @@ public class Menu {
                 window.getHeight() / 2 - 120 + startGameButton.getHeight() + numberOfBattleshipsComboBox.getHeight() +
                         numberOfCruisersComboBox.getHeight() + numberOfDestroyersComboBox.getHeight() +
                         numberOfSubmarinesComboBox.getHeight() + gameModeComboBox.getHeight());
+        boardSizeComboBox.setSelectedItem(10);
         boardSizeComboBox.setVisible(true);
 
         boardSizeText = new JLabel("Board Size: ");
