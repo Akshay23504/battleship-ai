@@ -1,9 +1,6 @@
 package game;
 
-import board.Algorithm1;
-import board.Board;
-import board.Creator;
-import board.SmallBoard;
+import board.*;
 import ship.Ship;
 import ship.ShipPiece;
 
@@ -27,6 +24,14 @@ public class Window {
     public static int boardSize;
     private boolean gameRunning;
     public static Mode gameMode;
+    enum AlgorithmSelector {
+        Algorithm1,
+        Algorithm2,
+        Algorithm3,
+        Algorithm4
+    }
+
+    private AlgorithmSelector algorithmSelector = AlgorithmSelector.Algorithm1;
 
     private JLabel playersTurn;
     private boolean playerOneTurn;
@@ -140,11 +145,25 @@ public class Window {
     private void beginGame(Ship[] playerOneShips, Ship[] playerTwoShips, Board board, SmallBoard smallBoard) {
         changeTurns(board, smallBoard);
         setPlayerOneTurn(false);
-        Algorithm1 playerOneKB = new Algorithm1();
-        Algorithm1 playerTwoKB = new Algorithm1();
-        playerOneKB.initializeScoreMap();
-        playerTwoKB.initializeScoreMap();
-        int[] indices;
+        Algorithm1 playerOneKB;
+        Algorithm1 playerTwoKB = null;
+
+        switch (algorithmSelector) {
+            case Algorithm1:
+                playerOneKB = new Algorithm1();
+                playerTwoKB = new Algorithm1();
+                playerOneKB.initializeScoreMap();
+                playerTwoKB.initializeScoreMap();
+                break;
+            case Algorithm2:
+                break;
+            case Algorithm3:
+                break;
+            case Algorithm4:
+                break;
+        }
+
+        int[] indices = new int[2];
 
         while (gameRunning) {
             switch (gameMode) {
@@ -159,13 +178,43 @@ public class Window {
                             mouseListener.mousePressed(mouseEvent);
                         }*/
                         if (!playerOneTurn) {
-                            indices = AI.dynamicProgramming(playerTwoKB);
-                            board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
-                            MouseEvent mouseEvent = new MouseEvent(frame, 0, 0, 0, indices[0], indices[1], 1, false);
-                            for (MouseListener mouseListener : frame.getMouseListeners()) {
-                                mouseListener.mousePressed(mouseEvent);
+                            /*if (playerTwoKB.getQueue().isEmpty()) {
+                                indices = AI.algorithm2(playerTwoKB);
+                            } else {
+                                Point point = playerTwoKB.getQueue().poll();
+                                indices[0] = point.y;
+                                indices[1] = point.x;
                             }
-                            playerTwoKB.updateScoreMap(indices[0], indices[1]);
+                            int result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                            if (result != 0) {
+                                playerTwoKB.update(indices[1], indices[0], board.getArray());
+                            }
+                            System.out.println((indices[1] + 1) + ", " + (indices[0] + 1));*/
+                            switch (algorithmSelector) {
+                                case Algorithm1:
+                                    indices = AI.dynamicProgramming(playerTwoKB);
+                                    int result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                                    while (result == 0) {
+                                        indices = AI.dynamicProgramming(playerTwoKB);
+                                        result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                                    }
+                                    System.out.println((indices[1] + 1) + ", " + (indices[0] + 1));
+                                    playerTwoKB.updateEnemyGrid(indices[0], indices[1], result);
+                                    playerTwoKB.updateScoreMap(indices[0], indices[1]);
+
+                                    MouseEvent mouseEvent = new MouseEvent(frame, 0, 0, 0, indices[0], indices[1], 1, false);
+                                    for (MouseListener mouseListener : frame.getMouseListeners()) {
+                                        mouseListener.mousePressed(mouseEvent);
+                                    }
+                                    break;
+                                case Algorithm2:
+                                    break;
+                                case Algorithm3:
+                                    break;
+                                case Algorithm4:
+                                    break;
+                            }
+
                         }
 //                    }
                     break;
@@ -175,9 +224,9 @@ public class Window {
                         indices = AI.getRandomIndices(board.getArray().length);
                     }*/
                     if (!playerOneTurn) {
-                        indices = AI.dynamicProgramming(playerTwoKB);
+//                        indices = AI.dynamicProgramming(playerTwoKB);
                     } else {
-                        indices = AI.dynamicProgramming(playerOneKB);
+//                        indices = AI.dynamicProgramming(playerOneKB);
                     }
                     board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
                     try {
@@ -188,11 +237,6 @@ public class Window {
                     MouseEvent mouseEvent = new MouseEvent(frame, 0, 0, 0, indices[0], indices[1], 1, false);
                     for (MouseListener mouseListener : frame.getMouseListeners()) {
                         mouseListener.mousePressed(mouseEvent);
-                    }
-                    if (!playerOneTurn) {
-                        playerOneKB.updateScoreMap(indices[0], indices[1]);
-                    } else {
-                        playerTwoKB.updateScoreMap(indices[0], indices[1]);
                     }
                     break;
                 case HumanVsHuman:
@@ -216,7 +260,6 @@ public class Window {
             smallBoard.repaint();
 
             boolean playerTwoAllShipsDead = true;
-
             for (int i = 0; i < playerTwoShips.length; i++) {
                 if (playerTwoShips[i].checkIfDead()) {
                     for (int j = 0; j < playerTwoShips[i].getShipPieces().length; j++) {

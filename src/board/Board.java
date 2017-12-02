@@ -90,7 +90,8 @@ public class Board extends JPanel implements MouseListener {
         }
     }
 
-    public boolean selectedPositionOnBoardByPlayer(int i, int j) {
+    public int selectedPositionOnBoardByPlayer(int i, int j) {
+        int result = 0;
         boolean valid = false;
         // if counter1 and counter2 are valid positions in the array
         if (i < array.length && i >= 0) {
@@ -101,6 +102,7 @@ public class Board extends JPanel implements MouseListener {
                     // set the object at the coordinate to 0 (an empty space)
                     array[i][j] = 0;
                     repaint();
+                    result = 2;
                     // end the turn
                     isTurn = false;
                     // if the object at the coordinate is a ShipPiece that is not destroyed
@@ -110,13 +112,14 @@ public class Board extends JPanel implements MouseListener {
                     // destroy the ship piece
                     ((ShipPiece) array[i][j]).destroy();
                     repaint();
+                    result = 1;
                     // end the turn
                     isTurn = false;
                 }
                 state = false;
             }
         }
-        return valid;
+        return result;
     }
 
     public Object[][] getArray() {
