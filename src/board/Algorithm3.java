@@ -6,12 +6,12 @@ import java.awt.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Algorithm2 {
+public class Algorithm3 {
 
     private Queue<Point> queue;
     private int customBoard[][];
 
-    public Algorithm2() {
+    public Algorithm3() {
         customBoard = new int[Window.boardSize][Window.boardSize];
         queue = new LinkedList<>();
         for (int i = 0; i < customBoard.length; i++) {

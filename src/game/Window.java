@@ -31,7 +31,7 @@ public class Window {
         Algorithm4
     }
 
-    private AlgorithmSelector algorithmSelector = AlgorithmSelector.Algorithm1;
+    private AlgorithmSelector algorithmSelector = AlgorithmSelector.Algorithm4;
 
     private JLabel playersTurn;
     private boolean playerOneTurn;
@@ -145,19 +145,27 @@ public class Window {
     private void beginGame(Ship[] playerOneShips, Ship[] playerTwoShips, Board board, SmallBoard smallBoard) {
         changeTurns(board, smallBoard);
         setPlayerOneTurn(false);
-        Algorithm1 playerOneKB;
-        Algorithm1 playerTwoKB = null;
+        Algorithm1 playerOneAlgorithm1KB = null;
+        Algorithm1 playerTwoAlgorithm1KB = null;
+        Algorithm2 playerOneAlgorithm2KB = null;
+        Algorithm2 playerTwoAlgorithm2KB = null;
+        Algorithm3 playerOneAlgorithm3KB = null;
+        Algorithm3 playerTwoAlgorithm3KB = null;
 
         switch (algorithmSelector) {
             case Algorithm1:
-                playerOneKB = new Algorithm1();
-                playerTwoKB = new Algorithm1();
-                playerOneKB.initializeScoreMap();
-                playerTwoKB.initializeScoreMap();
+                playerOneAlgorithm1KB = new Algorithm1();
+                playerTwoAlgorithm1KB = new Algorithm1();
+                playerOneAlgorithm1KB.initializeScoreMap();
+                playerTwoAlgorithm1KB.initializeScoreMap();
                 break;
             case Algorithm2:
+                playerTwoAlgorithm2KB = new Algorithm2();
+                playerOneAlgorithm2KB = new Algorithm2();
                 break;
             case Algorithm3:
+                playerTwoAlgorithm3KB = new Algorithm3();
+                playerOneAlgorithm3KB = new Algorithm3();
                 break;
             case Algorithm4:
                 break;
@@ -168,80 +176,151 @@ public class Window {
         while (gameRunning) {
             switch (gameMode) {
                 case HumanVsAI:
-//                    if (!playerOneTurn) {
-                        /*int[] indices = AI.getRandomIndices(board.getArray().length);
-                        while (!board.selectedPositionOnBoardByPlayer(indices[0], indices[1])) {
-                            indices = AI.getRandomIndices(board.getArray().length);
+                    if (!playerOneTurn) {
+                        switch (algorithmSelector) {
+                            case Algorithm1:
+                                indices = AI.algorithm1(playerTwoAlgorithm1KB);
+                                int result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                                while (result == 0) {
+                                    indices = AI.algorithm1(playerTwoAlgorithm1KB);
+                                    result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                                }
+                                playerTwoAlgorithm1KB.updateEnemyGrid(indices[0], indices[1], result);
+                                playerTwoAlgorithm1KB.updateScoreMap(indices[0], indices[1]);
+                                break;
+                            case Algorithm2:
+                                if (playerTwoAlgorithm2KB.getQueue().isEmpty()) {
+                                    indices = AI.algorithm2(playerTwoAlgorithm2KB);
+                                } else {
+                                    Point point = playerTwoAlgorithm2KB.getQueue().poll();
+                                    indices[0] = point.x;
+                                    indices[1] = point.y;
+                                }
+                                result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                                if (result == 1) playerTwoAlgorithm2KB.update(indices[0], indices[1]);
+                                break;
+                            case Algorithm3:
+                                if (playerTwoAlgorithm3KB.getQueue().isEmpty()) {
+                                    indices = AI.algorithm3(playerTwoAlgorithm3KB);
+                                } else {
+                                    Point point = playerTwoAlgorithm3KB.getQueue().poll();
+                                    indices[0] = point.x;
+                                    indices[1] = point.y;
+                                }
+                                result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                                if (result == 1) playerTwoAlgorithm3KB.update(indices[0], indices[1]);
+                                break;
+                            case Algorithm4:
+                                indices = AI.algorithm4(board.getArray().length);
+                                while (board.selectedPositionOnBoardByPlayer(indices[0], indices[1]) == 0) {
+                                    indices = AI.algorithm4(board.getArray().length);
+                                }
+                                break;
                         }
                         MouseEvent mouseEvent = new MouseEvent(frame, 0, 0, 0, indices[0], indices[1], 1, false);
                         for (MouseListener mouseListener : frame.getMouseListeners()) {
                             mouseListener.mousePressed(mouseEvent);
-                        }*/
-                        if (!playerOneTurn) {
-                            /*if (playerTwoKB.getQueue().isEmpty()) {
-                                indices = AI.algorithm2(playerTwoKB);
-                            } else {
-                                Point point = playerTwoKB.getQueue().poll();
-                                indices[0] = point.y;
-                                indices[1] = point.x;
-                            }
-                            int result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
-                            if (result != 0) {
-                                playerTwoKB.update(indices[1], indices[0], board.getArray());
-                            }
-                            System.out.println((indices[1] + 1) + ", " + (indices[0] + 1));*/
-                            switch (algorithmSelector) {
-                                case Algorithm1:
-                                    indices = AI.dynamicProgramming(playerTwoKB);
-                                    int result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
-                                    while (result == 0) {
-                                        indices = AI.dynamicProgramming(playerTwoKB);
-                                        result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
-                                    }
-                                    System.out.println((indices[1] + 1) + ", " + (indices[0] + 1));
-                                    playerTwoKB.updateEnemyGrid(indices[0], indices[1], result);
-                                    playerTwoKB.updateScoreMap(indices[0], indices[1]);
-
-                                    MouseEvent mouseEvent = new MouseEvent(frame, 0, 0, 0, indices[0], indices[1], 1, false);
-                                    for (MouseListener mouseListener : frame.getMouseListeners()) {
-                                        mouseListener.mousePressed(mouseEvent);
-                                    }
-                                    break;
-                                case Algorithm2:
-                                    break;
-                                case Algorithm3:
-                                    break;
-                                case Algorithm4:
-                                    break;
-                            }
-
                         }
-//                    }
+                    }
                     break;
                 case AIVsAI:
-                    /*int[] indices = AI.getRandomIndices(board.getArray().length);
-                    while (!board.selectedPositionOnBoardByPlayer(indices[0], indices[1])) {
-                        indices = AI.getRandomIndices(board.getArray().length);
-                    }*/
                     if (!playerOneTurn) {
-//                        indices = AI.dynamicProgramming(playerTwoKB);
+                        switch (algorithmSelector) {
+                            case Algorithm1:
+                                indices = AI.algorithm1(playerTwoAlgorithm1KB);
+                                int result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                                while (result == 0) {
+                                    indices = AI.algorithm1(playerTwoAlgorithm1KB);
+                                    result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                                }
+                                playerTwoAlgorithm1KB.updateEnemyGrid(indices[0], indices[1], result);
+                                playerTwoAlgorithm1KB.updateScoreMap(indices[0], indices[1]);
+                                break;
+                            case Algorithm2:
+                                if (playerTwoAlgorithm2KB.getQueue().isEmpty()) {
+                                    indices = AI.algorithm2(playerTwoAlgorithm2KB);
+                                } else {
+                                    Point point = playerTwoAlgorithm2KB.getQueue().poll();
+                                    indices[0] = point.x;
+                                    indices[1] = point.y;
+                                }
+                                result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                                if (result == 1) playerTwoAlgorithm2KB.update(indices[0], indices[1]);
+                                break;
+                            case Algorithm3:
+                                if (playerTwoAlgorithm3KB.getQueue().isEmpty()) {
+                                    indices = AI.algorithm3(playerTwoAlgorithm3KB);
+                                } else {
+                                    Point point = playerTwoAlgorithm3KB.getQueue().poll();
+                                    indices[0] = point.x;
+                                    indices[1] = point.y;
+                                }
+                                result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                                if (result == 1) playerTwoAlgorithm3KB.update(indices[0], indices[1]);
+                                break;
+                            case Algorithm4:
+                                indices = AI.algorithm4(board.getArray().length);
+                                while (board.selectedPositionOnBoardByPlayer(indices[0], indices[1]) == 0) {
+                                    indices = AI.algorithm4(board.getArray().length);
+                                }
+                                break;
+                        }
                     } else {
-//                        indices = AI.dynamicProgramming(playerOneKB);
+                        switch (algorithmSelector) {
+                            case Algorithm1:
+                                indices = AI.algorithm1(playerOneAlgorithm1KB);
+                                int result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                                while (result == 0) {
+                                    indices = AI.algorithm1(playerOneAlgorithm1KB);
+                                    result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                                }
+                                playerOneAlgorithm1KB.updateEnemyGrid(indices[0], indices[1], result);
+                                playerOneAlgorithm1KB.updateScoreMap(indices[0], indices[1]);
+                                break;
+                            case Algorithm2:
+                                if (playerOneAlgorithm2KB.getQueue().isEmpty()) {
+                                    indices = AI.algorithm2(playerOneAlgorithm2KB);
+                                } else {
+                                    Point point = playerOneAlgorithm2KB.getQueue().poll();
+                                    indices[0] = point.x;
+                                    indices[1] = point.y;
+                                }
+                                result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                                if (result == 1) playerOneAlgorithm2KB.update(indices[0], indices[1]);
+                                break;
+                            case Algorithm3:
+                                if (playerOneAlgorithm3KB.getQueue().isEmpty()) {
+                                    indices = AI.algorithm3(playerOneAlgorithm3KB);
+                                } else {
+                                    Point point = playerOneAlgorithm3KB.getQueue().poll();
+                                    indices[0] = point.x;
+                                    indices[1] = point.y;
+                                }
+                                result = board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
+                                if (result == 1) playerOneAlgorithm3KB.update(indices[0], indices[1]);
+                                break;
+                            case Algorithm4:
+                                indices = AI.algorithm4(board.getArray().length);
+                                while (board.selectedPositionOnBoardByPlayer(indices[0], indices[1]) == 0) {
+                                    indices = AI.algorithm4(board.getArray().length);
+                                }
+                                break;
+                        }
                     }
                     board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
-                    try {
+                    /*try {
                         TimeUnit.SECONDS.sleep(1);
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
-                    }
+                    }*/
                     MouseEvent mouseEvent = new MouseEvent(frame, 0, 0, 0, indices[0], indices[1], 1, false);
                     for (MouseListener mouseListener : frame.getMouseListeners()) {
                         mouseListener.mousePressed(mouseEvent);
                     }
                     break;
                 case HumanVsHuman:
-                    default:
-                        break;
+                default:
+                    break;
 
             }
             boolean playerOneAllShipsDead = true;

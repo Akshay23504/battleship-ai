@@ -115,52 +115,38 @@ public class Algorithm1 {
     }
 
     public int[] findTarget() {
-        System.out.println(getPossibleCoordinates());
         if (lastHit.x != -1 && hitBeforeLast.x == -1 && state == 0) {
             state = 1;
             keyCoordinate = lastHit;
             clearPossibleCoordinates();
-            if (movesMade[lastHit.x + 1][lastHit.y] == 0) {
+            if (lastHit.x < Window.boardSize && movesMade[lastHit.x + 1][lastHit.y] == 0) {
                 setPossibleCoordinates(new Point(lastHit.x, lastHit.y + 1));
             }
-            if (movesMade[lastHit.x][lastHit.y + 1] == 0) {
+            if (lastHit.y < Window.boardSize && movesMade[lastHit.x][lastHit.y + 1] == 0) {
                 setPossibleCoordinates(new Point(lastHit.x + 1, lastHit.y));
             }
-            if (movesMade[lastHit.x - 1][lastHit.y] == 0) {
+            if (lastHit.x > 0 && movesMade[lastHit.x - 1][lastHit.y] == 0) {
                 setPossibleCoordinates(new Point(lastHit.x, lastHit.y - 1));
             }
-            if (movesMade[lastHit.x][lastHit.y - 1] == 0) {
+            if (lastHit.y > 0 && movesMade[lastHit.x][lastHit.y - 1] == 0) {
                 setPossibleCoordinates(new Point(lastHit.x - 1, lastHit.y));
             }
-            System.out.println("State: " + state);
             Point result = getPointFromPossibleCoordinates();
+            if (result == null) return null;
             return new int[]{result.x, result.y};
         } else if ((state == 1 && lastHit.x != -1) || state > 1) {
             if (state == 1) state = 2;
-        /*if (hitList.size() > 0) {
-            lastHit = hitList.get(0);
-        } else if (hitList.size() == 1) {
-
-        }
-        if (hitList.size() > 1) {
-            hitBeforeLast = hitList.get(1);
-        } else {
-            hitBeforeLast = lastHit;
-        }*/
             if (state == 2) {
                 clearPossibleCoordinates();
                 findDirection();
                 addPossibleCoordinates();
                 state = 3;
             }
-            System.out.println("State: " + state);
-            System.out.println(getPossibleCoordinates());
             if (getPossibleCoordinates().size() == 0) return null;
             Point result = getPointFromPossibleCoordinates();
+            if (result == null) return null;
             return new int[]{result.x, result.y};
         } else {
-            System.out.println("State: " + state);
-            System.out.println(getPossibleCoordinates());
             Point result = getPointFromPossibleCoordinates();
             if (result == null) return null;
             return new int[]{result.x, result.y};
@@ -198,49 +184,55 @@ public class Algorithm1 {
     private void addPossibleCoordinates() {
         if (goHorizontal) {
             for (int ix = x - 1; ix < xMax; ix++) {
-                if (enemyGrid[y][ix] == shotFired || ix <= 0) continue;
-                if (enemyGrid[y][ix] != shipHit) {
-                    if (!getPossibleCoordinates().contains(new Point(ix, y)) && movesMade[ix][y] == 0) {
-                        setPossibleCoordinates(new Point(ix - 1, y));
+                if (ix >= 0) {
+                    if (enemyGrid[y][ix] == shotFired || ix <= 0) continue;
+                    if (enemyGrid[y][ix] != shipHit) {
+                        if (!getPossibleCoordinates().contains(new Point(ix, y)) && movesMade[ix][y] == 0) {
+                            setPossibleCoordinates(new Point(ix - 1, y));
+                        }
                     }
                 }
             }
         }
 
         if (goHorizontal) {
-            for (int ix = x+1; ix >= xMin; ix--) {
-                if (enemyGrid[y][ix] == shotFired || ix >= Window.boardSize) continue;
-                if (enemyGrid[y][ix] != shipHit) {
-                    if (!getPossibleCoordinates().contains(new Point(ix, y)) && movesMade[ix][y] == 0) {
-                        setPossibleCoordinates(new Point(ix - 1, y));
+            for (int ix = x + 1; ix >= xMin; ix--) {
+                if (ix < Window.boardSize) {
+                    if (enemyGrid[y][ix] == shotFired || ix >= Window.boardSize) continue;
+                    if (enemyGrid[y][ix] != shipHit) {
+                        if (!getPossibleCoordinates().contains(new Point(ix, y)) && movesMade[ix][y] == 0) {
+                            setPossibleCoordinates(new Point(ix - 1, y));
+                        }
                     }
                 }
             }
         }
 
         if (goVertical) {
-            for (int iy = y-1; iy < yMax; iy++) {
-                if (enemyGrid[iy][x] == shotFired || iy <= 0) continue;
-                if (enemyGrid[iy][x] != shipHit) {
-                    if (!getPossibleCoordinates().contains(new Point(x, iy)) && movesMade[x][iy] == 0) {
-                        setPossibleCoordinates(new Point(x, iy - 1));
+            for (int iy = y - 1; iy < yMax; iy++) {
+                if (iy >= 0) {
+                    if (enemyGrid[iy][x] == shotFired || iy <= 0) continue;
+                    if (enemyGrid[iy][x] != shipHit) {
+                        if (!getPossibleCoordinates().contains(new Point(x, iy)) && movesMade[x][iy] == 0) {
+                            setPossibleCoordinates(new Point(x, iy - 1));
+                        }
                     }
                 }
             }
         }
 
         if (goVertical) {
-            for (int iy = y+1; iy >= yMin; iy--) {
-                if (enemyGrid[iy][x] == shotFired || iy >= Window.boardSize) continue;
-                if (enemyGrid[iy][x] != shipHit) {
-                    if (!getPossibleCoordinates().contains(new Point(x, iy)) && movesMade[x][iy] == 0) {
-                        setPossibleCoordinates(new Point(x, iy - 1));
+            for (int iy = y + 1; iy >= yMin; iy--) {
+                if (iy < Window.boardSize) {
+                    if (enemyGrid[iy][x] == shotFired || iy >= Window.boardSize) continue;
+                    if (enemyGrid[iy][x] != shipHit) {
+                        if (!getPossibleCoordinates().contains(new Point(x, iy)) && movesMade[x][iy] == 0) {
+                            setPossibleCoordinates(new Point(x, iy - 1));
+                        }
                     }
                 }
-            }
+                }
         }
-        System.out.println("Inside Add Possible");
-        System.out.println(getPossibleCoordinates());
     }
 
     public void updateEnemyGrid(int x, int y, int result) {
@@ -253,11 +245,9 @@ public class Algorithm1 {
             hitBeforeLast = lastHit;
             lastHit = new Point(-1, -1);
             if (lastHit.x == -1 && hitBeforeLast.x != -1 && state == 3) {
-                System.out.println("Came here333");
                 updatePossibleCoordinates();
                 state = 4;
             } else if (lastHit.x == -1 && hitBeforeLast.x == -1 && state == 4) {
-                System.out.println("Came here444");
                 state = 0;
                 clearPossibleCoordinates();
             } /*else if (lastHit.x == -1 && hitBeforeLast.x == -1 && (state != 3)) {
