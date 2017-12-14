@@ -7,6 +7,9 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This is score based approach using dynamic programming
+ */
 public class Algorithm1 {
 
     private int[][] scoreMap = new int[Window.boardSize][Window.boardSize];
@@ -31,7 +34,10 @@ public class Algorithm1 {
     int yMin;
     int yMax;
 
-    // Initialize the score map here
+    /**
+     * Initialize the score map here
+     * Also we initialize the lastHit, beforeLastHit, enemyGrid, movesMade
+     */
     public void initializeScoreMap () {
         int ix, iy, jx, jy;
         for (int i = 0; i < scoreMap.length; i++) {
@@ -50,6 +56,11 @@ public class Algorithm1 {
         hitBeforeLast = new Point(-1, -1);
     }
 
+    /**
+     * Update the score map and also the scores matrix
+     * @param x The x coordinate
+     * @param y The y coordinate
+     */
     public void updateScoreMap(int x, int y) {
         int counter = 1;
         scoreMap[x][y] = 0;
@@ -89,6 +100,14 @@ public class Algorithm1 {
         calculateTop6();
     }
 
+    /**
+     * This method calculates the top 6 values in the scoreMap. We had to use
+     * a hashMap to keep track of the coordinates and their scores and then
+     * sort them based on the values and get the top 6 coordinates which are
+     * the keys.
+     *
+     * @return Array of x, y coordinate selected at random from top 6 scores
+     */
     public int[] calculateTop6() {
         Map<int[], Integer> map = new HashMap<>();
         for (int i = 0; i < scoreMap.length; i++) {
@@ -110,10 +129,24 @@ public class Algorithm1 {
         return top6[new Random().nextInt(top6.length)];
     }
 
+    /**
+     * Formula for this algorithm to calculate the DP score
+     * @param ix Horizontal value 1
+     * @param iy Horizontal value 2
+     * @param jx Vertical value 1
+     * @param jy Vertical value 2
+     * @return
+     */
     private int calculateScore(int ix, int iy, int jx, int jy) {
         return (ix + jx - (Math.abs(ix - jx))) * (iy + jy - (Math.abs(iy - jy)));
     }
 
+    /**
+     * This method finds a target to be shot at. It makes use of lastHit and
+     * beforeLastHit to determine the coordinates and also other Knowledge
+     * Bases (KBs)
+     * @return x, y coordinate in an array
+     */
     public int[] findTarget() {
         if (lastHit.x != -1 && hitBeforeLast.x == -1 && state == 0) {
             state = 1;
@@ -153,6 +186,9 @@ public class Algorithm1 {
         }
     }
 
+    /**
+     * This method uses lastHit and other KBs to establish a direction
+     */
     private void findDirection() {
         x = lastHit.x;
         y = lastHit.y;
@@ -235,6 +271,12 @@ public class Algorithm1 {
         }
     }
 
+    /**
+     * Update the enemy grid and also the states
+     * @param x The x coordinate
+     * @param y The y coordinate
+     * @param result Can be 1 or 2
+     */
     public void updateEnemyGrid(int x, int y, int result) {
         enemyGrid[x][y] = result;
         if (result == 1) {
@@ -258,6 +300,10 @@ public class Algorithm1 {
         }
     }
 
+    /**
+     * Remove the less probability coordinates once we have established a
+     * direction
+     */
     private void updatePossibleCoordinates() {
         getPossibleCoordinates().removeIf(point -> {
             if (goHorizontal) {
@@ -273,6 +319,9 @@ public class Algorithm1 {
         });
     }
 
+    /**
+     * Method to display the score map in matrix form
+     */
     public void displayScoreMap() {
         for (int i = 0; i < scoreMap.length; i++) {
             for (int j = 0; j < scoreMap[0].length; j++) {

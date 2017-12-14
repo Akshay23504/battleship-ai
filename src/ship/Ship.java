@@ -2,6 +2,10 @@ package ship;
 
 import java.awt.*;
 
+/**
+ * A class that defines all properties for a ship along with some helper
+ * methods
+ */
 public class Ship {
 
     private ShipPiece[] shipPieces;

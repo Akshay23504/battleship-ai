@@ -9,6 +9,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Class which defines the small board. This is used till the game ends.
+ */
 public class SmallBoard extends JPanel {
 
     private Object[][] array;
@@ -28,7 +31,7 @@ public class SmallBoard extends JPanel {
         setSize(getPreferredSize());
 
         try {
-            boardImage = ImageIO.read(new File("boardSmallLabels.png"));
+            boardImage = ImageIO.read(new File("images/boardSmallLabels.png"));
         } catch (IOException e) {
             System.out.println("Failed to load image");
         }

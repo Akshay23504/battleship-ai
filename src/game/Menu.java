@@ -3,6 +3,10 @@ package game;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * This class deals with everything that is present in the game menu.
+ * All the buttons, text, drop-downs etc. are defined here
+ */
 public class Menu {
 
     public static boolean gameRunning;
@@ -53,7 +57,7 @@ public class Menu {
         setUpTitles();
         setUpErrorMessage();
         setUpButtons();
-        setUpMenuWindow();
+        setupMenuWindow();
     }
 
     private void setUpButtons() {
@@ -333,7 +337,7 @@ public class Menu {
         return totalShipSize <= (int) boardSizeComboBox.getSelectedItem() * (int) boardSizeComboBox.getSelectedItem();
     }
 
-    private void setUpMenuWindow() {
+    private void setupMenuWindow() {
         window.getContentPane().add(projectTitleText);
         window.getContentPane().add(developedByText);
         window.getContentPane().add(projectMembersText);

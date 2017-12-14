@@ -7,16 +7,11 @@ import board.Algorithm3;
 import java.awt.*;
 import java.util.Random;
 
-// TODO Change name probably
+/**
+ * Calls different algorithms based on the inputs(KB) received from the game
+ * and all the methods return a valid coordinate
+ */
 public class AI {
-
-    public static int[] algorithm4(int n) {
-        int[] indices = new int[2];
-        Random random = new Random();
-        indices[0] = random.nextInt(n);
-        indices[1] = random.nextInt(n);
-        return indices;
-    }
 
     public static int[] algorithm1(Algorithm1 playerKB) {
         int[] result;
@@ -46,7 +41,7 @@ public class AI {
             Random random = new Random();
             indices[0] = random.nextInt(Window.boardSize);
             indices[1] = random.nextInt(Window.boardSize);
-        }while(playerKB.getCustomBoard()[indices[0]][indices[1]] == 1);
+        } while(playerKB.getCustomBoard()[indices[0]][indices[1]] == 1);
         playerKB.getCustomBoard()[indices[0]][indices[1]] = 1; // Mark as visited
         return indices;
     }
@@ -69,6 +64,14 @@ public class AI {
             }
         } while(playerKB.getCustomBoard()[indices[0]][indices[1]] == 1);
         playerKB.getCustomBoard()[indices[0]][indices[1]] = 1; // Mark as visited
+        return indices;
+    }
+
+    public static int[] algorithm4(int n) {
+        int[] indices = new int[2];
+        Random random = new Random();
+        indices[0] = random.nextInt(n);
+        indices[1] = random.nextInt(n);
         return indices;
     }
 

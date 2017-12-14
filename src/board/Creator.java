@@ -49,7 +49,7 @@ public class Creator extends JPanel {
         panelArray = new JPanel[this.shipArray.length];
 
         try {
-            boardImage = ImageIO.read(new File("boardLabels.png"));
+            boardImage = ImageIO.read(new File("images/boardLabels.png"));
         } catch (IOException e) {
             System.out.println("Failed to load Image");
         }

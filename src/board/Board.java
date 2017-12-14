@@ -11,6 +11,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Class which defines the actual board. This is used right from when the
+ * player places the ships on the board till the game ends.
+ */
 public class Board extends JPanel implements MouseListener {
 
     private BufferedImage boardImage;
@@ -34,7 +38,7 @@ public class Board extends JPanel implements MouseListener {
         setLocation(0, 0);
 
         try {
-            boardImage = ImageIO.read(new File("boardLabels.png"));
+            boardImage = ImageIO.read(new File("images/boardLabels.png"));
         } catch (IOException e) {
             System.out.println("Failed to load image");
         }
@@ -90,8 +94,16 @@ public class Board extends JPanel implements MouseListener {
         }
     }
 
+    /**
+     * Check if the selected position that is the target in the current turn is
+     * a valid one. And also check if it is hit or a miss and return
+     * appropriate values
+     * @param i coordinate
+     * @param j coordinate
+     * @return Return 0, 1 or 2
+     */
     public int selectedPositionOnBoardByPlayer(int i, int j) {
-        int result = 0;
+        int result = 0; // invalid coordinate
         boolean valid = false;
         // if counter1 and counter2 are valid positions in the array
         if (i < array.length && i >= 0) {
@@ -102,7 +114,7 @@ public class Board extends JPanel implements MouseListener {
                     // set the object at the coordinate to 0 (an empty space)
                     array[i][j] = 0;
                     repaint();
-                    result = 2;
+                    result = 2; // miss
                     // end the turn
                     isTurn = false;
                     // if the object at the coordinate is a ShipPiece that is not destroyed
@@ -112,7 +124,7 @@ public class Board extends JPanel implements MouseListener {
                     // destroy the ship piece
                     ((ShipPiece) array[i][j]).destroy();
                     repaint();
-                    result = 1;
+                    result = 1; // Hit
                     // end the turn
                     isTurn = false;
                 }

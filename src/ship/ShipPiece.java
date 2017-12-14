@@ -3,6 +3,11 @@ package ship;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * A single square of a ship. A ship piece is part of the ship. This class also
+ * has a few helper methods to perform functionalities like setting an image
+ * for a ship piece when there is a hit
+ */
 public class ShipPiece {
 
     private Image shipPieceAlive;
@@ -15,8 +20,8 @@ public class ShipPiece {
      */
     public ShipPiece(boolean isPlayer1) {
         this.isPlayer1 = isPlayer1;
-        if (isPlayer1) shipPieceAlive = new ImageIcon("Player1.png").getImage();
-        else shipPieceAlive = new ImageIcon("Player2.png").getImage();
+        if (isPlayer1) shipPieceAlive = new ImageIcon("images/player1.png").getImage();
+        else shipPieceAlive = new ImageIcon("images/player2.png").getImage();
         shipIsDestroyed = false;
     }
 
@@ -30,8 +35,8 @@ public class ShipPiece {
 
     public void destroy() {
         shipIsDestroyed = true;
-        if (isPlayer1) setShipImage("Player1Hit.png");
-        else setShipImage("Player2Hit.png");
+        if (isPlayer1) setShipImage("images/player1Hit.png");
+        else setShipImage("images/player2Hit.png");
     }
 
     public boolean isDestroyed() {

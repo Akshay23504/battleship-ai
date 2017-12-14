@@ -6,6 +6,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
+/**
+ * end the game when all ships have sunk and announce the winner
+ */
 public class End implements MouseListener {
 
     private JPanel window;
@@ -14,8 +17,8 @@ public class End implements MouseListener {
 
     public End(JFrame window, boolean playerOneWon) {
         this.window = (JPanel) window.getContentPane();
-        if (playerOneWon) backgroundImageIcon = new ImageIcon("P1Win.png");
-        else backgroundImageIcon = new ImageIcon("P2Win.png");
+        if (playerOneWon) backgroundImageIcon = new ImageIcon("images/p1Win.png");
+        else backgroundImageIcon = new ImageIcon("images/p2Win.png");
         Image scaledBackgroundImage = backgroundImageIcon.getImage().
                 getScaledInstance(window.getWidth(), window.getHeight(), BufferedImage.SCALE_FAST);
         backgroundImageContainer = new JLabel(new ImageIcon(scaledBackgroundImage));

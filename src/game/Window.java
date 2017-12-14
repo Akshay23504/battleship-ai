@@ -11,6 +11,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * We need to set up a game window where we can have a game menu inside it and
+ * also to play the game.
+ */
 public class Window {
 
     private JFrame frame;
@@ -31,14 +35,14 @@ public class Window {
         Algorithm4
     }
 
-    private AlgorithmSelector algorithmSelector = AlgorithmSelector.Algorithm4;
+    private AlgorithmSelector algorithmSelector = AlgorithmSelector.Algorithm2;
 
     private JLabel playersTurn;
     private boolean playerOneTurn;
     private final String playerOneTurnString = "Player 1's turn";
     private final String playerTwoTurnString = "Player 2's turn";
 
-    public void setupMenu() {
+    public void setupWindow() {
         frame = new JFrame();
         frame.getContentPane().setLayout(null);
         frame.getContentPane().setBackground(Color.WHITE);
@@ -142,6 +146,17 @@ public class Window {
         return creator.getBoardArray();
     }
 
+    /**
+     * Keep the game running and change turns after every move.
+     * The game stops when all ships of a player have been sunk. The game
+     * starts with the first player and hence we only need the first player
+     * board and the second player's small board. This is alternated in every
+     * turn
+     * @param playerOneShips Player one ships
+     * @param playerTwoShips Player two ships
+     * @param board Board which is defined for the first player
+     * @param smallBoard SmallBoard for the second player
+     */
     private void beginGame(Ship[] playerOneShips, Ship[] playerTwoShips, Board board, SmallBoard smallBoard) {
         changeTurns(board, smallBoard);
         setPlayerOneTurn(false);
@@ -308,11 +323,7 @@ public class Window {
                         }
                     }
                     board.selectedPositionOnBoardByPlayer(indices[0], indices[1]);
-                    /*try {
-                        TimeUnit.SECONDS.sleep(1);
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
-                    }*/
+                    delay();
                     MouseEvent mouseEvent = new MouseEvent(frame, 0, 0, 0, indices[0], indices[1], 1, false);
                     for (MouseListener mouseListener : frame.getMouseListeners()) {
                         mouseListener.mousePressed(mouseEvent);
@@ -328,7 +339,7 @@ public class Window {
             for (int i = 0; i < playerOneShips.length; i++) {
                 if (playerOneShips[i].checkIfDead()) {
                     for (int j = 0; j < playerOneShips[i].getShipPieces().length; j++) {
-                        playerOneShips[i].getShipPieces()[j].setShipImage("dead.png");
+                        playerOneShips[i].getShipPieces()[j].setShipImage("images/dead.png");
                     }
                 } else {
                     playerOneAllShipsDead = false;
@@ -342,7 +353,7 @@ public class Window {
             for (int i = 0; i < playerTwoShips.length; i++) {
                 if (playerTwoShips[i].checkIfDead()) {
                     for (int j = 0; j < playerTwoShips[i].getShipPieces().length; j++) {
-                        playerTwoShips[i].getShipPieces()[j].setShipImage("dead.png");
+                        playerTwoShips[i].getShipPieces()[j].setShipImage("images/dead.png");
                     }
                 } else {
                     playerTwoAllShipsDead = false;
@@ -389,6 +400,18 @@ public class Window {
 
     private void setPlayerOneTurn(boolean playerOneTurn) {
         this.playerOneTurn = playerOneTurn;
+    }
+
+    /**
+     * Delay of 1 second to actually see how the AIs are playing against each
+     * other
+     */
+    private void delay() {
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
 }
